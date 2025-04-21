@@ -1,23 +1,14 @@
-import { createRequestHandler } from "react-router";
-
-declare module "react-router" {
-  export interface AppLoadContext {
-    cloudflare: {
-      env: Env;
-      ctx: ExecutionContext;
-    };
-  }
-}
-
-const requestHandler = createRequestHandler(
-  () => import("virtual:react-router/server-build"),
-  import.meta.env.MODE,
-);
-
 export default {
-  fetch(request, env, ctx) {
-    return requestHandler(request, {
-      cloudflare: { env, ctx },
-    });
-  },
-} satisfies ExportedHandler<Env>;
+    async fetch(request: Request): Promise<Response> {
+        const url = new URL(request.url);
+
+        // Forward API requests to HelioHost
+        if (url.pathname.startsWith("/api")) {
+            const backendUrl = `https://api.infosecbyalex.xyz${url.pathname}`;
+            return fetch(backendUrl, request);
+        }
+
+        // Default response for non-API requests
+        return new Response("Not Found", { status: 404 });
+    }
+};
