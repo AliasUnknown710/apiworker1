@@ -10,5 +10,8 @@
   "upload_source_maps": true,
   "vars": {
     "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
-  }
+  },
+  "routes": [
+    "infosecbyalex.xyz/api/*"
+  ]
 }
